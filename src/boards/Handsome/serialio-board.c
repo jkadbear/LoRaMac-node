@@ -6,11 +6,11 @@
  * \copyright Revised BSD License, see section \ref LICENSE.
  *
  * \code
- *               _______ _____ _____ _   _  _____ _    _ _    _         
- *              |__   __/ ____|_   _| \ | |/ ____| |  | | |  | |  /\    
- *                 | | | (___   | | |  \| | |  __| |__| | |  | | /  \   
- *                 | |  \___ \  | | | . ` | | |_ |  __  | |  | |/ /\ \  
- *                 | |  ____) |_| |_| |\  | |__| | |  | | |__| / ____ \ 
+ *               _______ _____ _____ _   _  _____ _    _ _    _
+ *              |__   __/ ____|_   _| \ | |/ ____| |  | | |  | |  /\
+ *                 | | | (___   | | |  \| | |  __| |__| | |  | | /  \
+ *                 | |  \___ \  | | | . ` | | |_ |  __  | |  | |/ /\ \
+ *                 | |  ____) |_| |_| |\  | |__| | |  | | |__| / ____ \
  *                 |_| |_____/|_____|_| \_|\_____|_|  |_|\____/_/    \_\
  *              (C)2017-2018 Tsinghua
  *
@@ -37,14 +37,14 @@ void SerialioMcuInit(void)
     FifoInit(&Uart2.FifoRx, Serialio_RxBuffer, SERIALIO_FIFO_RX_SIZE);
 }
 
-// overwrite stdout
+// redirect stdout
 uint8_t SerialioMcuPutChar( char data )
 {
     UartPutChar(&Uart2, (uint8_t) data);
     return 1;
 }
 
-// overwrite stdin
+// redirect stdin
 uint8_t SerialioMcuGetChar( char *pdata )
 {
     while (UartGetChar(&Uart2, (uint8_t *) pdata));

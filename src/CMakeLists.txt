@@ -46,6 +46,9 @@ option(USE_BOOTLOADER "Use Bootloader" OFF)
 # Switch for debugger support.
 option(USE_DEBUGGER "Use Debugger" ON)
 
+# Allow serial port log
+add_definitions(-DSERIALIO -DLOGLEVEL=LOG_DEBUG)
+
 #---------------------------------------------------------------------------------------
 # Target Boards
 #---------------------------------------------------------------------------------------
@@ -179,9 +182,6 @@ elseif(BOARD STREQUAL Handsome)
     set(RADIO sx1276 CACHE INTERNAL "Radio sx1276 selected")
 
 endif()
-
-# Allow serial port log
-add_definitions(-DSERIALIO -DLOGLEVEL=LOG_DEBUG)
 
 #---------------------------------------------------------------------------------------
 # General Components

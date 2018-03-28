@@ -133,7 +133,7 @@ void BoardInitPeriph( void )
 
     GpioInit( &Led1, LED_1, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
     GpioInit( &Led2, LED_2, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-	
+
 #if defined( USE_DEBUG_PINS )
 	GpioInit( &DbgPin1, CON_EXT_1, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
 	GpioInit( &DbgPin2, CON_EXT_3, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
@@ -152,10 +152,11 @@ void BoardInitMcu( void )
         HAL_Init( );
 
         SystemClockConfig( );
-		
+
 #if defined( SERIALIO )
         SerialioInit();
 #endif
+
         RtcInit( );
 
         BoardUnusedIoInit( );
@@ -366,7 +367,7 @@ void SystemClockConfig( void )
     {
         assert_param( FAIL );
     }
-		
+
     HAL_SYSTICK_Config( HAL_RCC_GetHCLKFreq( ) / 1000 );
 
     HAL_SYSTICK_CLKSourceConfig( SYSTICK_CLKSOURCE_HCLK );

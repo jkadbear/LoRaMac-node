@@ -6,11 +6,11 @@
  * \copyright Revised BSD License, see section \ref LICENSE.
  *
  * \code
- *               _______ _____ _____ _   _  _____ _    _ _    _         
- *              |__   __/ ____|_   _| \ | |/ ____| |  | | |  | |  /\    
- *                 | | | (___   | | |  \| | |  __| |__| | |  | | /  \   
- *                 | |  \___ \  | | | . ` | | |_ |  __  | |  | |/ /\ \  
- *                 | |  ____) |_| |_| |\  | |__| | |  | | |__| / ____ \ 
+ *               _______ _____ _____ _   _  _____ _    _ _    _
+ *              |__   __/ ____|_   _| \ | |/ ____| |  | | |  | |  /\
+ *                 | | | (___   | | |  \| | |  __| |__| | |  | | /  \
+ *                 | |  \___ \  | | | . ` | | |_ |  __  | |  | |/ /\ \
+ *                 | |  ____) |_| |_| |\  | |__| | |  | | |__| / ____ \
  *                 |_| |_____/|_____|_| \_|\_____|_|  |_|\____/_/    \_\
  *              (C)2017-2018 Tsinghua
  *
@@ -27,7 +27,7 @@ void SerialioInit(void)
     SerialioMcuInit();
 }
 
-// overwrite stdout
+// redirect stdout
 int _write (int fd, char *pBuffer, int size)
 {
     for (int i = 0; i < size; i++)
@@ -35,7 +35,7 @@ int _write (int fd, char *pBuffer, int size)
     return size;
 }
 
-// overwrite stdin
+// redirect stdin
 int _read (int fd, char *pBuffer, int size)
 {
     SerialioMcuGetChar(pBuffer);
