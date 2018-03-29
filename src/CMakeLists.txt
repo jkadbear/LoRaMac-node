@@ -23,7 +23,7 @@ cmake_minimum_required(VERSION 3.6)
 #---------------------------------------------------------------------------------------
 
 # Allow switching of target platform
-set(BOARD_LIST LoRaMote MoteII NAMote72 SensorNode SK-iM880A NucleoL073 NucleoL152 SAML21)
+set(BOARD_LIST LoRaMote MoteII NAMote72 SensorNode SK-iM880A NucleoL073 NucleoL152 SAML21 Handsome)
 set(BOARD LoRaMote CACHE STRING "Default target platform is LoRaMote")
 set_property(CACHE BOARD PROPERTY STRINGS ${BOARD_LIST})
 
@@ -33,7 +33,7 @@ set(MBED_RADIO_SHIELD SX1261DVK1BAS CACHE STRING "Default MBED radio shield is S
 set_property(CACHE MBED_RADIO_SHIELD PROPERTY STRINGS ${MBED_RADIO_SHIELD_LIST})
 
 # Allow switching of Applications
-set(APPLICATION_LIST LoRaMac ping-pong rx-sensi tx-cw BootLoader)
+set(APPLICATION_LIST LoRaMac ping-pong rx-sensi tx-cw BootLoader LoRaMeasurement)
 set(APPLICATION LoRaMac CACHE STRING "Default Application is LoRaMac")
 set_property(CACHE APPLICATION PROPERTY STRINGS ${APPLICATION_LIST})
 
@@ -48,6 +48,9 @@ option(USE_DEBUGGER "Use Debugger" ON)
 
 # Switch for Class B support of LoRaMac.
 option(CLASSB_ENABLED "Class B support of LoRaMac" OFF)
+
+# Allow serial port log
+add_definitions(-DSERIALIO -DLOGLEVEL=LOG_DEBUG)
 
 #---------------------------------------------------------------------------------------
 # Target Boards
@@ -170,6 +173,17 @@ elseif(BOARD STREQUAL SAML21)
     # Configure radio
     set(RADIO sx1276 CACHE INTERNAL "Radio sx1276 selected")
 
+elseif(BOARD STREQUAL Handsome)
+    # Configure toolchain for Handsome
+    set(LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/boards/Handsome/cmsis/arm-gcc/stm32l052xx_flash.ld)
+    include(stm32l0)
+
+    # Build platform specific board implementation
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/boards/Handsome)
+
+    # Configure radio
+    set(RADIO sx1276 CACHE INTERNAL "Radio sx1276 selected")
+
 endif()
 
 #---------------------------------------------------------------------------------------
@@ -209,5 +223,9 @@ elseif(APPLICATION STREQUAL tx-cw)
 elseif(APPLICATION STREQUAL BootLoader)
 
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/apps/BootLoader)
+
+elseif(APPLICATION STREQUAL LoRaMeasurement)
+
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/apps/LoRaMeasurement)
 
 endif()
