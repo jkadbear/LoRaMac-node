@@ -32,6 +32,7 @@
 
 #include "RegionCommon.h"
 #include "RegionCN470.h"
+#include "serialio.h"
 
 // Definitions
 #define CHANNELS_MASK_SIZE              6
@@ -107,7 +108,8 @@ static uint8_t CountNbOfEnabledChannels( uint8_t datarate, uint16_t* channelsMas
 
     for( uint8_t i = 0, k = 0; i < CN470_MAX_NB_CHANNELS; i += 16, k++ )
     {
-        for( uint8_t j = 0; j < 16; j++ )
+        // A single gateway equipped with sx1301 only supports 8 channels
+        for( uint8_t j = 0; j < 8; j++ )
         {
             if( ( channelsMask[k] & ( 1 << j ) ) != 0 )
             {
@@ -290,7 +292,9 @@ void RegionCN470InitDefaults( InitType_t type )
             // 125 kHz channels
             for( uint8_t i = 0; i < CN470_MAX_NB_CHANNELS; i++ )
             {
-                Channels[i].Frequency = 470300000 + i * 200000;
+                // A single gateway equipped with sx1301 only supports 8 channels
+                // we set the min freq = 486.3MHz
+                Channels[i].Frequency = 486300000 + i * 200000;
                 Channels[i].DrRange.Value = ( DR_5 << 4 ) | DR_0;
                 Channels[i].Band = 0;
             }

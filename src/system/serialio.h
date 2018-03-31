@@ -21,6 +21,8 @@
 #ifndef __SERIALIO_H__
 #define __SERIALIO_H__
 
+#include <stdio.h>
+
 /*!
  * FIFO buffers size
  */

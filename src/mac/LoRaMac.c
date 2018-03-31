@@ -32,6 +32,11 @@
 #include "LoRaMac.h"
 #include "LoRaMacCrypto.h"
 #include "LoRaMacTest.h"
+#include "serialio.h"
+
+// Measure the delay
+TimerTime_t last_time;
+TimerTime_t cur_time;
 
 /*!
  * Maximum PHY layer payload size
@@ -787,6 +792,9 @@ static void OnRadioRxDone( uint8_t *payload, uint16_t size, int16_t rssi, int8_t
     switch( macHdr.Bits.MType )
     {
         case FRAME_TYPE_JOIN_ACCEPT:
+            cur_time = TimerGetCurrentTime();
+            log_debug("JoinAccept receive at: %d, delay=%dms\n", cur_time, cur_time - last_time);
+            last_time = cur_time;
             if( IsLoRaMacNetworkJoined == true )
             {
                 McpsIndication.Status = LORAMAC_EVENT_INFO_STATUS_ERROR;
@@ -848,6 +856,9 @@ static void OnRadioRxDone( uint8_t *payload, uint16_t size, int16_t rssi, int8_t
         case FRAME_TYPE_DATA_CONFIRMED_DOWN:
         case FRAME_TYPE_DATA_UNCONFIRMED_DOWN:
             {
+                cur_time = TimerGetCurrentTime();
+                log_debug("DataDown receive at: %d, delay=%dms\n", cur_time, cur_time - last_time);
+                last_time = cur_time;
                 // Check if the received payload size is valid
                 getPhy.UplinkDwellTime = LoRaMacParams.DownlinkDwellTime;
                 getPhy.Datarate = McpsIndication.RxDatarate;
@@ -2010,7 +2021,7 @@ static LoRaMacStatus_t ScheduleTx( bool allowDelayedTx )
 
     if( status != LORAMAC_STATUS_OK )
     {
-        if( ( status == LORAMAC_STATUS_DUTYCYCLE_RESTRICTED ) && 
+        if( ( status == LORAMAC_STATUS_DUTYCYCLE_RESTRICTED ) &&
             ( allowDelayedTx == true ) )
         {
             // Allow delayed transmissions. We have to allow it in case
@@ -3328,6 +3339,7 @@ LoRaMacStatus_t LoRaMacMcpsRequest( McpsReq_t *mcpsRequest )
             fBuffer = mcpsRequest->Req.Unconfirmed.fBuffer;
             fBufferSize = mcpsRequest->Req.Unconfirmed.fBufferSize;
             datarate = mcpsRequest->Req.Unconfirmed.Datarate;
+            log_debug("Send Req Unconfirmed, DR: %d\n", datarate);
             break;
         }
         case MCPS_CONFIRMED:
@@ -3340,6 +3352,7 @@ LoRaMacStatus_t LoRaMacMcpsRequest( McpsReq_t *mcpsRequest )
             fBuffer = mcpsRequest->Req.Confirmed.fBuffer;
             fBufferSize = mcpsRequest->Req.Confirmed.fBufferSize;
             datarate = mcpsRequest->Req.Confirmed.Datarate;
+            log_debug("Send Req Confirmed, DR: %d\n", datarate);
             break;
         }
         case MCPS_PROPRIETARY:

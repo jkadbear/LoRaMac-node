@@ -40,7 +40,8 @@
 /*!
  * LoRaMac maximum number of channels
  */
-#define CN470_MAX_NB_CHANNELS                        96
+// A single gateway equipped with sx1301 only supports 8 channels
+#define CN470_MAX_NB_CHANNELS                       8
 
 /*!
  * Minimal datarate that can be used by the node
@@ -186,7 +187,10 @@
 /*!
  * Defines the first channel for RX window 1 for CN470 band
  */
-#define CN470_FIRST_RX1_CHANNEL                     ( (uint32_t) 500300000 )
+// A single gateway equipped with sx1301 only supports 8 channels
+// we set the min Tx freq = 486.3MHz instead of 470.3MHz
+// therefore the firs Rx1 channel: 500.3MHz => 516.3MHz
+#define CN470_FIRST_RX1_CHANNEL                     ( (uint32_t) 516300000 )
 
 /*!
  * Defines the last channel for RX window 1 for CN470 band
