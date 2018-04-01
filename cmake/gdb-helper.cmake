@@ -88,6 +88,10 @@ function(generate_vscode_launch_openocd TARGET)
     elseif(BOARD STREQUAL SAML21)
         set(OPENOCD_INTERFACE cmsis-dap.cfg)
         set(OPENOCD_TARGET at91samdXX.cfg)
+    elseif(BOARD STREQUAL Handsome)
+        set(OPENOCD_INTERFACE jlink.cfg)
+        set(OPENOCD_TARGET stm32l0.cfg)
+        set(JLINK_SWD "-c \\\"transport select swd\\\"")
     endif()
 
 

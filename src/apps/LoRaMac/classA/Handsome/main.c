@@ -665,7 +665,7 @@ int main( void )
     DeviceState = DEVICE_STATE_INIT;
 
     uint32_t tmp;
-    log_info("Start LoRaWAN, read NodeID, DevEui AppKey:\n");
+    printf("Start LoRaWAN, read NodeID, DevEui AppKey:\n");
 
     scanf("%ld", &node_id);
     printf("NodeID: %ld\n", node_id);
@@ -745,6 +745,7 @@ int main( void )
                 {
                     DeviceState = DEVICE_STATE_CYCLE;
                 }
+                log_debug("Send OTAA join request\n");
 #else
                 // Choose a random device address if not already defined in Commissioning.h
                 if( DevAddr == 0 )

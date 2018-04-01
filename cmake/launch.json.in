@@ -11,7 +11,7 @@
             "cwd": "${workspaceRoot}",
             "environment": [],
             "externalConsole": false,
-            "debugServerArgs": "-f interface/@OPENOCD_INTERFACE@ -f target/@OPENOCD_TARGET@",
+            "debugServerArgs": "-f interface/@OPENOCD_INTERFACE@ @JLINK_SWD@ -f target/@OPENOCD_TARGET@",
             "serverLaunchTimeout": 20000,
             "filterStderr": true,
             "filterStdout": false,
