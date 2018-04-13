@@ -108,8 +108,7 @@ static uint8_t CountNbOfEnabledChannels( uint8_t datarate, uint16_t* channelsMas
 
     for( uint8_t i = 0, k = 0; i < CN470_MAX_NB_CHANNELS; i += 16, k++ )
     {
-        // A single gateway equipped with sx1301 only supports 8 channels
-        for( uint8_t j = 0; j < 8; j++ )
+        for( uint8_t j = 0; j < 16; j++ )
         {
             if( ( channelsMask[k] & ( 1 << j ) ) != 0 )
             {
@@ -292,20 +291,27 @@ void RegionCN470InitDefaults( InitType_t type )
             // 125 kHz channels
             for( uint8_t i = 0; i < CN470_MAX_NB_CHANNELS; i++ )
             {
-                // A single gateway equipped with sx1301 only supports 8 channels
-                // we set the min freq = 486.3MHz
-                Channels[i].Frequency = 486300000 + i * 200000;
+                Channels[i].Frequency = 470300000 + i * 200000;
                 Channels[i].DrRange.Value = ( DR_5 << 4 ) | DR_0;
                 Channels[i].Band = 0;
             }
 
             // Initialize the channels default mask
-            ChannelsDefaultMask[0] = 0xFFFF;
-            ChannelsDefaultMask[1] = 0xFFFF;
-            ChannelsDefaultMask[2] = 0xFFFF;
-            ChannelsDefaultMask[3] = 0xFFFF;
-            ChannelsDefaultMask[4] = 0xFFFF;
-            ChannelsDefaultMask[5] = 0xFFFF;
+            // ChannelsDefaultMask[0] = 0xFFFF;
+            // ChannelsDefaultMask[1] = 0xFFFF;
+            // ChannelsDefaultMask[2] = 0xFFFF;
+            // ChannelsDefaultMask[3] = 0xFFFF;
+            // ChannelsDefaultMask[4] = 0xFFFF;
+            // ChannelsDefaultMask[5] = 0xFFFF;
+
+            // A single gateway equipped with sx1301 only supports 8 channels
+            // we set the min freq = 486.3MHz
+            ChannelsDefaultMask[0] = 0x0000;
+            ChannelsDefaultMask[1] = 0x0000;
+            ChannelsDefaultMask[2] = 0x0000;
+            ChannelsDefaultMask[3] = 0x0000;
+            ChannelsDefaultMask[4] = 0x0000;
+            ChannelsDefaultMask[5] = 0x00FF;
 
             // Update the channels mask
             RegionCommonChanMaskCopy( ChannelsMask, ChannelsDefaultMask, 6 );
@@ -430,12 +436,23 @@ bool RegionCN470AdrNext( AdrNextParams_t* adrNext, int8_t* drOut, int8_t* txPowO
                         if( adrNext->UpdateChanMask == true )
                         {
                             // Re-enable default channels
-                            ChannelsMask[0] = 0xFFFF;
-                            ChannelsMask[1] = 0xFFFF;
-                            ChannelsMask[2] = 0xFFFF;
-                            ChannelsMask[3] = 0xFFFF;
-                            ChannelsMask[4] = 0xFFFF;
-                            ChannelsMask[5] = 0xFFFF;
+                            // ChannelsMask[0] = 0xFFFF;
+                            // ChannelsMask[1] = 0xFFFF;
+                            // ChannelsMask[2] = 0xFFFF;
+                            // ChannelsMask[3] = 0xFFFF;
+                            // ChannelsMask[4] = 0xFFFF;
+                            // ChannelsMask[5] = 0xFFFF;
+
+
+                            // A single gateway equipped with sx1301 only supports 8 channels
+                            // we set the min freq = 486.3MHz
+                            ChannelsMask[0] = 0x0000;
+                            ChannelsMask[1] = 0x0000;
+                            ChannelsMask[2] = 0x0000;
+                            ChannelsMask[3] = 0x0000;
+                            ChannelsMask[4] = 0x0000;
+                            ChannelsMask[5] = 0x00FF;
+
                         }
                     }
                 }
@@ -554,12 +571,21 @@ uint8_t RegionCN470LinkAdrReq( LinkAdrReqParams_t* linkAdrReq, int8_t* drOut, in
         if( linkAdrParams.ChMaskCtrl == 6 )
         {
             // Enable all 125 kHz channels
-            channelsMask[0] = 0xFFFF;
-            channelsMask[1] = 0xFFFF;
-            channelsMask[2] = 0xFFFF;
-            channelsMask[3] = 0xFFFF;
-            channelsMask[4] = 0xFFFF;
-            channelsMask[5] = 0xFFFF;
+            // channelsMask[0] = 0xFFFF;
+            // channelsMask[1] = 0xFFFF;
+            // channelsMask[2] = 0xFFFF;
+            // channelsMask[3] = 0xFFFF;
+            // channelsMask[4] = 0xFFFF;
+            // channelsMask[5] = 0xFFFF;
+
+            // A single gateway equipped with sx1301 only supports 8 channels
+            // we set the min freq = 486.3MHz
+            ChannelsMask[0] = 0x0000;
+            ChannelsMask[1] = 0x0000;
+            ChannelsMask[2] = 0x0000;
+            ChannelsMask[3] = 0x0000;
+            ChannelsMask[4] = 0x0000;
+            ChannelsMask[5] = 0x00FF;
         }
         else if( linkAdrParams.ChMaskCtrl == 7 )
         {
@@ -567,15 +593,18 @@ uint8_t RegionCN470LinkAdrReq( LinkAdrReqParams_t* linkAdrReq, int8_t* drOut, in
         }
         else
         {
-            for( uint8_t i = 0; i < 16; i++ )
-            {
-                if( ( ( linkAdrParams.ChMask & ( 1 << i ) ) != 0 ) &&
-                    ( Channels[linkAdrParams.ChMaskCtrl * 16 + i].Frequency == 0 ) )
-                {// Trying to enable an undefined channel
-                    status &= 0xFE; // Channel mask KO
-                }
-            }
-            channelsMask[linkAdrParams.ChMaskCtrl] = linkAdrParams.ChMask;
+            // gateway only supports 8 channels, channelmask switch is not allowed
+            status &= 0xFE;
+
+            // for( uint8_t i = 0; i < 16; i++ )
+            // {
+            //     if( ( ( linkAdrParams.ChMask & ( 1 << i ) ) != 0 ) &&
+            //         ( Channels[linkAdrParams.ChMaskCtrl * 16 + i].Frequency == 0 ) )
+            //     {// Trying to enable an undefined channel
+            //         status &= 0xFE; // Channel mask KO
+            //     }
+            // }
+            // channelsMask[linkAdrParams.ChMaskCtrl] = linkAdrParams.ChMask;
         }
     }
 
@@ -695,12 +724,21 @@ LoRaMacStatus_t RegionCN470NextChannel( NextChanParams_t* nextChanParams, uint8_
     // Count 125kHz channels
     if( RegionCommonCountChannels( ChannelsMask, 0, 6 ) == 0 )
     { // Reactivate default channels
-        ChannelsMask[0] = 0xFFFF;
-        ChannelsMask[1] = 0xFFFF;
-        ChannelsMask[2] = 0xFFFF;
-        ChannelsMask[3] = 0xFFFF;
-        ChannelsMask[4] = 0xFFFF;
-        ChannelsMask[5] = 0xFFFF;
+        // ChannelsMask[0] = 0xFFFF;
+        // ChannelsMask[1] = 0xFFFF;
+        // ChannelsMask[2] = 0xFFFF;
+        // ChannelsMask[3] = 0xFFFF;
+        // ChannelsMask[4] = 0xFFFF;
+        // ChannelsMask[5] = 0xFFFF;
+
+        // A single gateway equipped with sx1301 only supports 8 channels
+        // we set the min freq = 486.3MHz
+        ChannelsMask[0] = 0x0000;
+        ChannelsMask[1] = 0x0000;
+        ChannelsMask[2] = 0x0000;
+        ChannelsMask[3] = 0x0000;
+        ChannelsMask[4] = 0x0000;
+        ChannelsMask[5] = 0x00FF;
     }
 
     if( nextChanParams->AggrTimeOff <= TimerGetElapsedTime( nextChanParams->LastAggrTx ) )

@@ -26,8 +26,8 @@
 /*!
  * FIFO buffers size
  */
-#define SERIALIO_FIFO_TX_SIZE                   256
-#define SERIALIO_FIFO_RX_SIZE                   256
+#define SERIALIO_FIFO_TX_SIZE                   64
+#define SERIALIO_FIFO_RX_SIZE                   64
 
 #define USART_BAUDRATE                          115200
 
@@ -35,13 +35,6 @@
  * \brief Initializes the serial port to support log
  */
 void SerialioInit(void);
-
-// redirect stdout
-int _write (int fd, char *pBuffer, int size);
-
-// redirect stdin
-int _read (int fd, char *pBuffer, int size);
-
 
 /*!
  * Log level

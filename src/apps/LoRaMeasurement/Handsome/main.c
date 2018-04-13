@@ -55,17 +55,17 @@ static void OnRadioTxDone(void)
     Radio.SetChannel(507500000); // Hz
     Radio.SetRxConfig(MODEM_LORA, 0, 12, 1, 0, 8, 5000, false, 0, false, 0, 0, false, true);
     Radio.Rx(0);
-    printf("OnRadioTxDone\n");
+    //printf("OnRadioTxDone\n");
 }
 
 static void OnRadioRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 {
-    printf("OnRadioRxDone\n");
-    for (int i = 0; i < size; i++)
-    {
-        printf("%x ", payload[i]);
-    }
-    printf("\n");
+    // printf("OnRadioRxDone\n");
+    // for (int i = 0; i < size; i++)
+    // {
+    //     printf("%x ", payload[i]);
+    // }
+    // printf("\n");
 
     if (size == 3)
     {
@@ -92,17 +92,17 @@ static void OnRadioRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t 
 
 static void OnRadioRxError(void)
 {
-    Radio.Sleep();
+    // Radio.Sleep();
 }
 
 static void OnRadioTxTimeout(void)
 {
-    Radio.Sleep();
+    // Radio.Sleep();
 }
 
 static void OnRadioRxTimeout(void)
 {
-    Radio.Sleep();
+    // Radio.Sleep();
 }
 
 /**
@@ -146,9 +146,9 @@ int main(void)
     // scanf("%d", (uint32_t*)&data_size);
     // scanf("%d", &freq);
 
-    memcpy(AppData, &loc_node_id, 4);      // store node id in AppData
+    memcpy(AppData, &loc_node_id, 1);      // store node id in AppData
     memcpy(AppData + 4, &tx_dutycycle, 4); // store dutycycle in AppData
-    memcpy(AppData + 8, &data_size, 4);    // store data size in AppData
+    memcpy(AppData + 8, &data_size, 2);    // store data size in AppData
     // log_info("AppData: ");
     // for (int i = 0; i < data_size; i++)
     // {
@@ -160,12 +160,8 @@ int main(void)
 
     while (1)
     {
-        // make sure all parameters are fixed in one sending turn
-        BoardDisableIrq();
-
         if (!is_on)
         {
-            BoardEnableIrq();
             DelayMs(tx_dutycycle); // have a rest~~
             continue;
         }
@@ -238,10 +234,9 @@ int main(void)
         // Send now
         Radio.Send(AppData, data_size);
 
-        log_debug("sent_cnt:%d, power:%d, bw:%d, dr:%d, cr:%d, freq:%d\n", sent_cnt++,
-                  power, bandwidth, datarate, coderate, freq);
-
-        BoardEnableIrq();
+        // log_debug("sent_cnt:%d, power:%d, bw:%d, dr:%d, cr:%d, freq:%d\n", sent_cnt++,
+        //           power, bandwidth, datarate, coderate, freq);
+        sent_cnt++;
 
         DelayMs(tx_dutycycle); // have a rest~~
     }
